@@ -144,7 +144,7 @@ class splunk::params (
       $forwarder_src_subdir = 'windows'
       $password_config_file = 'C:/Program Files/SplunkUniversalForwarder/etc/passwd'
       $secret_file          =  'C:/Program Files/SplunkUniversalForwarder/etc/splunk.secret'
-      $forwarder_service    = [ 'splunkd' ] # UNKNOWN
+      $forwarder_service    = [ 'SplunkForwarder' ] # UNKNOWN
       $forwarder_confdir    = "${forwarder_dir}/etc"
       $server_src_subdir    = 'windows'
       $server_service       = [ 'Splunkd', 'SplunkWeb' ] # UNKNOWN
