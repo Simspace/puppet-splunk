@@ -144,7 +144,7 @@ class splunk::params (
       $forwarder_src_subdir = 'windows'
       $password_config_file = 'C:/Program Files/SplunkUniversalForwarder/etc/passwd'
       $secret_file          =  'C:/Program Files/SplunkUniversalForwarder/etc/splunk.secret'
-      $forwarder_service    = [ 'SplunkForwarder' ] # UNKNOWN
+      $forwarder_service    = [ 'splunkd' ] # UNKNOWN
       $forwarder_confdir    = "${forwarder_dir}/etc"
       $server_src_subdir    = 'windows'
       $server_service       = [ 'Splunkd', 'SplunkWeb' ] # UNKNOWN
@@ -201,6 +201,7 @@ class splunk::params (
     'RedHat':  { $pkg_provider = 'rpm'  }
     'Debian':  { $pkg_provider = 'dpkg' }
     'Solaris': { $pkg_provider = 'sun'  }
+    'Windows': { $pkg_provider = 'windows'  }
     default:   { $pkg_provider = undef  } # Don't define a $pkg_provider
   }
 

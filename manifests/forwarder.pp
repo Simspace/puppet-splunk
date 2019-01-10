@@ -97,15 +97,21 @@ class splunk::forwarder (
     $pkg_path_parts   = [$archive::path, $staging_subdir, $src_pkg_filename]
     $staged_package   = join($pkg_path_parts, $path_delimiter)
 
-   file { '/etc/systemd/system/splunk.service':
-      ensure => 'link',
-      target => '/etc/systemd/system/SplunkForwarder.service',
-      before => Package[$package_name],
+    if $::osfamily != 'Windows' {
+      file { '/etc/systemd/system/splunk.service':
+        ensure => 'link',
+        target => '/etc/systemd/system/SplunkForwarder.service',
+        before => Package[$package_name],
+      }
     }
 
     archive { $staged_package:
       source  => $_package_source,
       extract => false,
+    } ->
+    file { $staged_package:
+      ensure  => 'present',
+      source  => $_package_source,
       before  => Package[$package_name],
     }
   } else {
