@@ -83,7 +83,7 @@
 class splunk::params (
   String $version                        = '7.2.3',
   String $build                          = '06d57c595b80',
-  String $src_root                       = 'puppet:///modules/splunk',
+  String $src_root                       = 'puppet:///install/splunk',
   Stdlib::Port $splunkd_port             = 8089,
   Stdlib::Port $logging_port             = 9997,
   String $server                         = 'splunk',
