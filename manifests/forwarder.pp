@@ -91,28 +91,34 @@ class splunk::forwarder (
 
   #no need for staging the source if we have yum or apt
   if $pkg_provider != undef and $pkg_provider != 'yum' and $pkg_provider != 'apt' and $pkg_provider != 'chocolatey' {
-    include ::archive::staging
+    include staging
 
     $src_pkg_filename = basename($_package_source)
-    $pkg_path_parts   = [$archive::path, $staging_subdir, $src_pkg_filename]
+    $pkg_path_parts   = [$staging::path, $staging_subdir, $src_pkg_filename]
     $staged_package   = join($pkg_path_parts, $path_delimiter)
 
     if $::osfamily != 'Windows' {
+      $installfile = "${src_root}/products/universalforwarder/releases/${version}/linux/${src_pkg_filename}"
       file { '/etc/systemd/system/splunk.service':
         ensure => 'link',
         target => '/etc/systemd/system/SplunkForwarder.service',
-        before => Package[$package_name],
       }
+    } else {
+        $installfile = "${src_root}/products/universalforwarder/releases/${version}/windows/${src_pkg_filename}"
     }
 
-    archive { $staged_package:
-      source  => $_package_source,
-      extract => false,
-    } ->
-    file { $staged_package:
-      ensure  => 'present',
-      source  => $_package_source,
-      before  => Package[$package_name],
+    staging::file { "splunkforwarder-${package_suffix}":
+      source => $installfile,
+      before => Package[$package_name],
+    }
+
+    if $::osfamily == 'Windows' {
+      acl { "${::staging_windir}/splunk/splunkforwarder-${package_suffix}":
+        purge       => false,
+        permissions => [ { identity => 'Administrators', rights => ['full'] },],
+        require     => Staging::File["splunkforwarder-${package_suffix}"],
+        before => Package[$package_name],
+      }
     }
   } else {
     $staged_package = undef
