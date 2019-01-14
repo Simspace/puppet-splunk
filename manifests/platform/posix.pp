@@ -24,6 +24,12 @@ class splunk::platform::posix (
   # Many of the resources declared here are virtual. They will be realized by
   # the appropriate including class if required.
 
+  # Need to make symlink since service is installed as SplunkForwarder.service
+  file { '/etc/systemd/system/splunk.service':
+    ensure => 'link',
+    target => '/etc/systemd/system/SplunkForwarder.service',
+  }
+
   # Commands to run to enable the SplunkUniversalForwarder
   @exec { 'license_splunkforwarder':
     path    => "${splunk::params::forwarder_dir}/bin",
@@ -38,7 +44,7 @@ class splunk::platform::posix (
 
     # The path parameter can't be set because the boot-start silently fails on systemd service providers
     command => "${splunk::params::forwarder_dir}/bin/splunk enable boot-start -user ${splunk_user}",
-    creates => '/etc/init.d/splunk',
+    creates => '/etc/systemd/system/SplunkForwarder.service',
     require => Exec['license_splunkforwarder'],
     tag     => 'splunk_forwarder',
     notify  => Service['splunk'],

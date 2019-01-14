@@ -99,10 +99,6 @@ class splunk::forwarder (
 
     if $::osfamily != 'Windows' {
       $installfile = "${src_root}/products/universalforwarder/releases/${version}/linux/${src_pkg_filename}"
-      file { '/etc/systemd/system/splunk.service':
-        ensure => 'link',
-        target => '/etc/systemd/system/SplunkForwarder.service',
-      }
     } else {
         $installfile = "${src_root}/products/universalforwarder/releases/${version}/windows/${src_pkg_filename}"
     }
